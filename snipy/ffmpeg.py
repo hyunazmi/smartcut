@@ -6,8 +6,8 @@ import tempfile
 from collections.abc import Sequence
 from functools import lru_cache
 
-from smartcut.exceptions import FFmpegError, ProbeError, ToolNotFoundError
-from smartcut.progress import StepProgress
+from snipy.exceptions import FFmpegError, ProbeError, ToolNotFoundError
+from snipy.progress import StepProgress
 
 FFMPEG = "ffmpeg"
 FFPROBE = "ffprobe"

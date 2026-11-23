@@ -3,8 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-from smartcut.config import MAX_CRF
-from smartcut.exceptions import SmartcutError
+from snipy.config import MAX_CRF
+from snipy.exceptions import SnipyError
 
 SUPPORTED_CONTAINERS = frozenset({".mp4", ".m4v", ".mov", ".mkv", ".webm", ".ts"})
 SUPPORTED_VIDEO_CODECS = frozenset({"h264", "hevc", "av1", "vp9", "mpeg2video"})
@@ -79,10 +79,10 @@ def ensure_container(path: Path) -> None:
     if path.suffix.lower() not in SUPPORTED_CONTAINERS:
         supported = ", ".join(sorted(SUPPORTED_CONTAINERS))
         found = f"Format '{path.suffix}'" if path.suffix else "A file without extension"
-        raise SmartcutError(f"{found} is not supported (supported: {supported})")
+        raise SnipyError(f"{found} is not supported (supported: {supported})")
 
 
 def ensure_input_file(path: Path) -> None:
     if not path.is_file():
-        raise SmartcutError(f"Input file not found: {path}")
+        raise SnipyError(f"Input file not found: {path}")
     ensure_container(path)

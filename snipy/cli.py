@@ -7,9 +7,9 @@ import sys
 from pathlib import Path
 from typing import NoReturn
 
-from smartcut import __version__
-from smartcut.codecs import profile_for
-from smartcut.config import (
+from snipy import __version__
+from snipy.codecs import profile_for
+from snipy.config import (
     DEFAULT_CRF,
     DEFAULT_PRESET,
     MAX_CRF,
@@ -18,14 +18,14 @@ from smartcut.config import (
     parse_crf,
     validate_preset,
 )
-from smartcut.cutter import cut_video
-from smartcut.exceptions import CancelledError, SmartcutError
-from smartcut.interactive import confirm_overwrite, prompt_cut_options
-from smartcut.logging_setup import SUCCESS, configure_logging
-from smartcut.summary import format_summary
-from smartcut.timecode import parse_timecode
+from snipy.cutter import cut_video
+from snipy.exceptions import CancelledError, SnipyError
+from snipy.interactive import confirm_overwrite, prompt_cut_options
+from snipy.logging_setup import SUCCESS, configure_logging
+from snipy.summary import format_summary
+from snipy.timecode import parse_timecode
 
-DESCRIPTION = "Cut videos with the smartcut method"
+DESCRIPTION = "Cut videos with the smart cut method"
 H26X_MAX_CRF = profile_for("libx264").crf_range[1]
 EXIT_FAILURE = 1
 EXIT_USAGE = 2
@@ -41,7 +41,7 @@ class _Parser(argparse.ArgumentParser):
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = _Parser(prog="smartcut", description=DESCRIPTION, add_help=False)
+    parser = _Parser(prog="snipy", description=DESCRIPTION, add_help=False)
     files = parser.add_argument_group("input and output")
     cut_range = parser.add_argument_group("cut range")
     encoding = parser.add_argument_group("re-encoding")
@@ -67,7 +67,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--output",
         type=Path,
         metavar="FILE",
-        help="Output file (default: <input>_smartcut.<ext>)",
+        help="Output file (default: <input>_snipy.<ext>)",
     )
     cut_range.add_argument(
         "-s",
@@ -136,7 +136,7 @@ def main() -> int:
     except EOFError:
         logger.error("No input available, cannot read an answer")
         return EXIT_FAILURE
-    except SmartcutError as exc:
+    except SnipyError as exc:
         logger.error("%s", exc)
         return EXIT_FAILURE
     except OSError as exc:

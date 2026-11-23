@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-from smartcut.timecode import format_duration, format_timecode
+from snipy.timecode import format_duration, format_timecode
 
 MIN_OTHER_SECONDS = 0.05
 

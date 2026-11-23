@@ -5,7 +5,7 @@ import os
 import sys
 
 SUCCESS = 25
-LOGGER_NAME = "smartcut"
+LOGGER_NAME = "snipy"
 logging.addLevelName(SUCCESS, "SUCCESS")
 _RESET = "\x1b[0m"
 _BOLD = "\x1b[1m"

@@ -6,7 +6,7 @@ from pathlib import Path
 DEFAULT_CRF = 23
 DEFAULT_PRESET = "ultrafast"
 MAX_CRF = 63
-OUTPUT_SUFFIX_TAG = "_smartcut"
+OUTPUT_SUFFIX_TAG = "_snipy"
 PRESETS = (
     "ultrafast",
     "superfast",

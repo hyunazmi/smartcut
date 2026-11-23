@@ -3,15 +3,15 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "smartcut"
-version = "0.1.0"
-description = "Cut videos with the smartcut method"
+name = "snipy"
+version = "0.2.0"
+description = "Cut videos with the smart cut method"
 requires-python = ">=3.10"
 license = { text = "MIT" }
 dependencies = []
 
 [project.scripts]
-smartcut = "smartcut.cli:main"
+snipy = "snipy.cli:main"
 
 [tool.setuptools.packages.find]
-include = ["smartcut*"]
+include = ["snipy*"]

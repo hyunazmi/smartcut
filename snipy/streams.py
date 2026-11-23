@@ -2,16 +2,16 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from smartcut.codecs import (
+from snipy.codecs import (
     AUDIO_ENCODER_CANDIDATES,
     SUPPORTED_AUDIO_CODECS,
     SUPPORTED_VIDEO_CODECS,
     VIDEO_ENCODER_CANDIDATES,
     profile_for,
 )
-from smartcut.exceptions import SmartcutError
-from smartcut.ffmpeg import available_encoders
-from smartcut.probe import MediaInfo, StreamInfo
+from snipy.exceptions import SnipyError
+from snipy.ffmpeg import available_encoders
+from snipy.probe import MediaInfo, StreamInfo
 
 FALLBACK_VIDEO_ENCODER = "libx264"
 FALLBACK_VIDEO_CODEC = "h264"
@@ -45,7 +45,7 @@ class StreamSelection:
         return tuple(stream for stream in self.streams if not stream.is_video)
 
     @property
-    def can_smartcut(self) -> bool:
+    def can_smart_cut(self) -> bool:
         return self.video is not None and all(s.native for s in self.streams)
 
 
@@ -71,7 +71,7 @@ def select_streams(media: MediaInfo) -> StreamSelection:
             excluded.append(stream)
 
     if not kept:
-        raise SmartcutError("No video or audio stream can be processed")
+        raise SnipyError("No video or audio stream can be processed")
     return StreamSelection(tuple(kept), tuple(excluded))
 
 
@@ -84,7 +84,7 @@ def ensure_crf_supported(selection: StreamSelection, crf: int) -> None:
         return
     low, high = profile.crf_range
     if not low <= crf <= high:
-        raise SmartcutError(
+        raise SnipyError(
             f"CRF {crf} is outside the range {low}-{high} "
             f"supported by encoder '{video.encoder}'"
         )
@@ -94,7 +94,7 @@ def _ensure_supported(stream: StreamInfo) -> None:
     is_video = stream.codec_type == "video"
     allowed = SUPPORTED_VIDEO_CODECS if is_video else SUPPORTED_AUDIO_CODECS
     if stream.codec_name not in allowed:
-        raise SmartcutError(
+        raise SnipyError(
             f"{stream.codec_type.capitalize()} codec '{stream.codec_name}' "
             f"is not supported (supported: {', '.join(sorted(allowed))})"
         )
@@ -115,7 +115,7 @@ def _choose_encoder(stream: StreamInfo) -> OutputStream:
     else:
         encoder, codec = FALLBACK_AUDIO_ENCODER, FALLBACK_AUDIO_CODEC
     if encoder not in installed:
-        raise SmartcutError(
+        raise SnipyError(
             f"Encoder '{encoder}' is not available, "
             f"so codec '{stream.codec_name}' cannot be processed"
         )

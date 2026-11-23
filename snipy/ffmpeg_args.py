@@ -4,7 +4,7 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import NamedTuple
 
-from smartcut.codecs import (
+from snipy.codecs import (
     ANNEXB_BITSTREAM_FILTERS,
     FASTSTART_SUFFIXES,
     LOSSY_AUDIO_ENCODERS,
@@ -12,9 +12,9 @@ from smartcut.codecs import (
     TS_VIDEO_CODECS,
     profile_for,
 )
-from smartcut.planner import Segment
-from smartcut.streams import OutputStream
-from smartcut.timecode import to_ffmpeg_time
+from snipy.planner import Segment
+from snipy.streams import OutputStream
+from snipy.timecode import to_ffmpeg_time
 
 TS_SUFFIX = ".ts"
 MKV_SUFFIX = ".mkv"

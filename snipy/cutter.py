@@ -10,11 +10,11 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import NamedTuple
 
-from smartcut.codecs import ensure_container, ensure_input_file
-from smartcut.config import CutOptions
-from smartcut.exceptions import CancelledError, ProbeError, SmartcutError
-from smartcut.ffmpeg import ensure_tools_available, run_ffmpeg
-from smartcut.ffmpeg_args import (
+from snipy.codecs import ensure_container, ensure_input_file
+from snipy.config import CutOptions
+from snipy.exceptions import CancelledError, ProbeError, SnipyError
+from snipy.ffmpeg import ensure_tools_available, run_ffmpeg
+from snipy.ffmpeg_args import (
     AUDIO_PART_SUFFIX,
     AudioPart,
     annexb_args,
@@ -25,7 +25,7 @@ from smartcut.ffmpeg_args import (
     merge_args,
     video_part_suffix,
 )
-from smartcut.planner import (
+from snipy.planner import (
     Segment,
     SegmentKind,
     is_full_reencode,
@@ -34,21 +34,21 @@ from smartcut.planner import (
     resolve_range,
     video_window,
 )
-from smartcut.probe import (
+from snipy.probe import (
     MediaInfo,
     probe_audio_frame,
     probe_media,
     probe_timeline,
 )
-from smartcut.progress import StepProgress
-from smartcut.streams import (
+from snipy.progress import StepProgress
+from snipy.streams import (
     OutputStream,
     StreamSelection,
     ensure_crf_supported,
     select_streams,
 )
-from smartcut.summary import CutSummary, StepTiming
-from smartcut.timecode import format_duration, to_ffmpeg_time
+from snipy.summary import CutSummary, StepTiming
+from snipy.timecode import format_duration, to_ffmpeg_time
 
 logger = logging.getLogger(__name__)
 PRE_ROLL_SECONDS = 10.0
@@ -132,17 +132,17 @@ def _probe_duration(path: Path) -> float | None:
 def _prepare_output(options: CutOptions, confirm_overwrite: Callable[[], bool]) -> Path:
     output = options.resolved_output()
     if output.is_dir():
-        raise SmartcutError(f"Output path is a directory: {output}")
+        raise SnipyError(f"Output path is a directory: {output}")
     ensure_container(output)
     if output.resolve() == options.input_path.resolve():
-        raise SmartcutError("Output file must not be the same as the input file")
+        raise SnipyError("Output file must not be the same as the input file")
     if output.exists():
         logger.warning("Output file already exists: %s", output)
         if not confirm_overwrite():
             raise CancelledError("the existing output file was not overwritten")
     output.parent.mkdir(parents=True, exist_ok=True)
     if not os.access(output.parent, os.W_OK):
-        raise SmartcutError(f"No write permission for directory: {output.parent}")
+        raise SnipyError(f"No write permission for directory: {output.parent}")
     return output
 
 
@@ -161,7 +161,7 @@ def _plan_segments(
 ) -> list[Segment]:
     if selection.video is None:
         return plan_full_reencode(start, end)
-    if not selection.can_smartcut:
+    if not selection.can_smart_cut:
         logger.warning(
             "Some streams have no encoder for their original codec, "
             "so the whole range will be re-encoded"
@@ -197,7 +197,7 @@ def _assemble(
 ) -> None:
     suffix = video_part_suffix(video)
     origin, length = video_window(segments)
-    with tempfile.TemporaryDirectory(prefix="smartcut_") as temp_dir:
+    with tempfile.TemporaryDirectory(prefix="snipy_") as temp_dir:
         folder = Path(temp_dir)
         parts: list[Path] = []
         copy_done = False

@@ -6,9 +6,9 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 from enum import Enum, auto
 
-from smartcut.exceptions import SmartcutError
-from smartcut.probe import GroupOfPictures
-from smartcut.timecode import format_timecode
+from snipy.exceptions import SnipyError
+from snipy.probe import GroupOfPictures
+from snipy.timecode import format_timecode
 
 logger = logging.getLogger(__name__)
 EPSILON = 0.001
@@ -51,7 +51,7 @@ def resolve_range(
     begin = 0.0 if start is None else start
     if end is None:
         if duration is None:
-            raise SmartcutError(
+            raise SnipyError(
                 "Video duration is unknown, use -e to set the cut end time"
             )
         finish = duration
@@ -59,7 +59,7 @@ def resolve_range(
         finish = end
     if duration is not None:
         if begin >= duration:
-            raise SmartcutError(
+            raise SnipyError(
                 f"Start time {format_timecode(begin)} is beyond "
                 f"the video duration {format_timecode(duration)}"
             )
@@ -69,7 +69,7 @@ def resolve_range(
             )
             finish = duration
     if finish - begin <= EPSILON:
-        raise SmartcutError("End time must be greater than start time")
+        raise SnipyError("End time must be greater than start time")
     return (begin, finish)
 
 

@@ -6,8 +6,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from smartcut.exceptions import ProbeError
-from smartcut.ffmpeg import run_ffprobe
+from snipy.exceptions import ProbeError
+from snipy.ffmpeg import run_ffprobe
 
 CSV_WITHOUT_SECTION_NAME = "csv=print_section=0"
 KEYFRAME_FLAG = "K"

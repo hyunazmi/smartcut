@@ -6,10 +6,10 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import TypeVar
 
-from smartcut.codecs import ensure_container, ensure_input_file
-from smartcut.config import MAX_CRF, CutOptions, parse_crf, validate_preset
-from smartcut.exceptions import SmartcutError
-from smartcut.timecode import format_timecode, parse_timecode
+from snipy.codecs import ensure_container, ensure_input_file
+from snipy.config import MAX_CRF, CutOptions, parse_crf, validate_preset
+from snipy.exceptions import SnipyError
+from snipy.timecode import format_timecode, parse_timecode
 
 logger = logging.getLogger(__name__)
 T = TypeVar("T")
@@ -65,7 +65,7 @@ def _ask(
             return default
         try:
             return parse(answer)
-        except (ValueError, SmartcutError) as exc:
+        except (ValueError, SnipyError) as exc:
             logger.error("%s", exc)
 
 
