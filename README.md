@@ -78,11 +78,3 @@ snipy -f video.mp4 -s 00:01:30 -e 00:02:45
 ## Lisensi
 
 [MIT](LICENSE)
-
-## Pengujian
-
-```bash
-python3 -m unittest discover -s tests -t . -v
-```
-
-Test end-to-end membuat video sintetis dengan FFmpeg (H.264, HEVC, 10-bit, MKV, berbagai fps, dengan/tanpa audio) lalu membandingkan setiap frame hasil potongan dengan sumbernya. Test yang tidak butuh FFmpeg (timecode, config, planner) tetap jalan tanpa FFmpeg.
