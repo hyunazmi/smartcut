@@ -23,6 +23,7 @@ from snipy.ffmpeg_args import (
     encode_stream_args,
     length_limit_args,
     merge_args,
+    tag_args,
     video_part_suffix,
 )
 from snipy.planner import (
@@ -219,6 +220,7 @@ def _assemble(
             run_ffmpeg(
                 [
                     *merge_args(list_file, audio),
+                    *tag_args((video,), output),
                     *container_args(output),
                     str(output),
                 ],
@@ -280,6 +282,7 @@ def _encode_segment(
                 *_seek_args(job.input_path, segment.start),
                 *length_limit_args(segment),
                 *encode_stream_args(streams, job.crf, job.preset),
+                *tag_args(streams, output),
                 "-avoid_negative_ts",
                 "make_zero",
                 *container_args(output),

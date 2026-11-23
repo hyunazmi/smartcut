@@ -21,6 +21,7 @@ MKV_SUFFIX = ".mkv"
 AUDIO_PART_SUFFIX = ".mka"
 DUMP_EXTRA_FILTER = "dump_extra=freq=keyframe"
 FRAME_LIMIT_PADDING = 0.5
+HEVC_MP4_TAG = "hvc1"
 
 
 class AudioPart(NamedTuple):
@@ -59,6 +60,15 @@ def annexb_args(video: OutputStream | None, input_path: Path, part: Path) -> lis
         return []
     annexb_filter = ANNEXB_BITSTREAM_FILTERS[video.output_codec]
     return ["-bsf:v", f"{annexb_filter},{DUMP_EXTRA_FILTER}"]
+
+
+def tag_args(streams: Sequence[OutputStream], path: Path) -> list[str]:
+    """Tag HEVC as hvc1 in MP4-like files: FFmpeg's default hev1 does not play in Safari/iOS."""
+    if path.suffix.lower() not in FASTSTART_SUFFIXES:
+        return []
+    if any(item.is_video and item.output_codec == "hevc" for item in streams):
+        return ["-tag:v", HEVC_MP4_TAG]
+    return []
 
 
 def container_args(path: Path) -> list[str]:
